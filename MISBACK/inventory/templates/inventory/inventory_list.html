@@ -1,1 +1,14 @@
+<!-- backend/inventory/templates/inventory/inventory_list.html -->
 
+{% extends "base.html" %}
+{% block content %}
+  <h2>Inventory List</h2>
+  <a href="{% url 'inventory_add' %}">Add New Item</a>
+  <ul>
+    {% for item in inventory_items %}
+      <li>
+        <a href="{% url 'inventory_detail' item.id %}">{{ item.name }}</a> ({{ item.quantity }})
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}
