@@ -1,5 +1,8 @@
 # backend/core/utils.py
 import os
+import uuid
+
+import requests
 from django.core.exceptions import ImproperlyConfigured
 from django.core.mail import send_mail
 from django.conf import settings
@@ -29,3 +32,40 @@ def format_date(date, format='%Y-%m-%d'):
     if not isinstance(date, datetime):
         raise ValueError("The provided value must be a datetime object")
     return date.strftime(format)
+
+
+
+def make_api_request(url, method='GET', data=None, headers=None):
+    """
+    Make an API request.
+    """
+    try:
+        if method.upper() == 'GET':
+            response = requests.get(url, headers=headers)
+        elif method.upper() == 'POST':
+            response = requests.post(url, json=data, headers=headers)
+        else:
+            raise ValueError("Unsupported HTTP method")
+        
+        response.raise_for_status()
+        return response.json()
+    except requests.RequestException as e:
+        raise SystemExit(e)
+        
+def handle_uploaded_file(file, upload_dir='uploads/'):
+    """
+    Handle file upload and save it to the specified directory.
+    """
+    if not os.path.exists(upload_dir):
+        os.makedirs(upload_dir)
+    
+    filename = f"{uuid.uuid4()}_{file.name}"
+    filepath = os.path.join(upload_dir, filename)
+    
+    with open(filepath, 'wb+') as destination:
+        for chunk in file.chunks():
+            destination.write(chunk)
+    
+    return filepath
+
+
