@@ -1,1 +1,61 @@
+/* backend/inventory/static/inventory/css/styles.css */
 
+/* Basic styling for inventory module */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+h2 {
+    color: #333;
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+}
+
+.inventory-list {
+    list-style: none;
+    padding: 0;
+}
+
+.inventory-list li {
+    background: #fff;
+    margin: 5px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.inventory-list a {
+    text-decoration: none;
+    color: #333;
+}
+
+.inventory-form {
+    background: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+}
+
+.inventory-form input, .inventory-form textarea, .inventory-form select, .inventory-form button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    box-sizing: border-box;
+}
+
+.inventory-form button {
+    background: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.inventory-form button:hover {
+    background: #555;
+}
