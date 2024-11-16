@@ -1,1 +1,12 @@
+<!-- backend/inventory/templates/inventory/inventory_form.html -->
 
+{% extends "base.html" %}
+{% block content %}
+  <h2>{% if form.instance.pk %}Edit{% else %}Add{% endif %} Inventory Item</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+  </form>
+  <a href="{% url 'inventory_list' %}">Back to List</a>
+{% endblock %}
