@@ -1,14 +1,21 @@
 <!-- backend/inventory/templates/inventory/inventory_list.html -->
 
-{% extends "base.html" %}
-{% block content %}
-  <h2>Inventory List</h2>
-  <a href="{% url 'inventory_add' %}">Add New Item</a>
-  <ul>
-    {% for item in inventory_items %}
-      <li>
-        <a href="{% url 'inventory_detail' item.id %}">{{ item.name }}</a> ({{ item.quantity }})
-      </li>
-    {% endfor %}
-  </ul>
-{% endblock %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventory List</title>
+    <link rel="stylesheet" href="{% static 'inventory/css/styles.css' %}">
+    <script src="{% static 'inventory/js/scripts.js' %}" defer></script>
+</head>
+<body>
+    <div class="container">
+        <h2>Inventory List</h2>
+        <a href="{% url 'inventory_add' %}">Add New Item</a>
+        <ul class="inventory-list">
+            <!-- Inventory items will be dynamically loaded here by JavaScript -->
+        </ul>
+    </div>
+</body>
+</html>
