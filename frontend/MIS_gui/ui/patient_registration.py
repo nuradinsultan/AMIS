@@ -1,8 +1,8 @@
 import sys
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QApplication, QWidget, QFormLayout, QLineEdit, QPushButton, QVBoxLayout, QLabel
 import json
-from PySide6.QtGui import QIntValidator
+import re
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QApplication, QWidget, QFormLayout, QLineEdit, QPushButton, QVBoxLayout, QLabel, QMessageBox
 
 class PatientRegistrationApp(QWidget):
     def __init__(self):
@@ -10,7 +10,7 @@ class PatientRegistrationApp(QWidget):
 
         self.setWindowTitle("Patient Registration")
         self.setGeometry(100, 100, 400, 400)
-        
+
         # Layouts
         layout = QVBoxLayout()
 
@@ -69,8 +69,40 @@ class PatientRegistrationApp(QWidget):
 
         self.setLayout(layout)
 
+    def is_valid_date(self, date_str):
+        """ Validate the date format as YYYY-MM-DD """
+        return bool(re.match(r'\d{4}-\d{2}-\d{2}', date_str))
+
+    def is_valid_email(self, email_str):
+        """ Validate email format """
+        return bool(re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email_str))
+
+    def is_valid_phone(self, phone_str):
+        """ Validate phone number format """
+        return bool(re.match(r'^\+?\d{10,15}$', phone_str))
+
     def register_patient(self):
-        # Get the user input data
+        # Validate required fields
+        if not self.identifier_input.text() or not self.family_name_input.text() or not self.given_name_input.text():
+            QMessageBox.warning(self, "Input Error", "Identifier, Family Name, and Given Name are required fields.")
+            return
+
+        # Validate date format
+        if not self.is_valid_date(self.birth_date_input.text()):
+            QMessageBox.warning(self, "Input Error", "Invalid Birth Date format. Use YYYY-MM-DD.")
+            return
+
+        # Validate email
+        if self.email_input.text() and not self.is_valid_email(self.email_input.text()):
+            QMessageBox.warning(self, "Input Error", "Invalid Email format.")
+            return
+
+        # Validate phone number
+        if self.phone_input.text() and not self.is_valid_phone(self.phone_input.text()):
+            QMessageBox.warning(self, "Input Error", "Invalid Phone number format.")
+            return
+
+        # Prepare patient data
         patient_data = {
             "resourceType": "Patient",
             "id": self.identifier_input.text(),
@@ -85,11 +117,12 @@ class PatientRegistrationApp(QWidget):
             "address": [{"use": "home", "line": [self.address_input.text()], "city": "Unknown", "state": "Unknown", "postalCode": "0000", "country": "Unknown"}],
         }
 
-        # Convert the Python dictionary to a formatted JSON string
+        # Convert patient data to JSON
         fhir_patient_json = json.dumps(patient_data, indent=4)
 
-        # Display the FHIR JSON data in the label
+        # Display the FHIR resource
         self.fhir_data_display.setText(fhir_patient_json)
+        QMessageBox.information(self, "Success", "Patient Registered Successfully!")
 
 
 if __name__ == "__main__":
